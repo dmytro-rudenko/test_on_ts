@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt-nodejs";
-import crypto from "crypto";
 import mongoose from "mongoose";
-export type UserDocument = mongoose.Document & {
+export interface UserDocument = mongoose.Document & {
     login: string;
     email: string;
     password: string;
@@ -51,4 +50,4 @@ const comparePassword: comparePasswordFunction = function (candidatePassword, cb
 };
 
 userSchema.methods.comparePassword = comparePassword;
-export const User = mongoose.model<UserDocument>("User", userSchema);
+export const UserModel = mongoose.model<UserDocument>("User", userSchema);

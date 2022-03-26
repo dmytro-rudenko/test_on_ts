@@ -1,7 +1,7 @@
 import passport from "passport";
 import passportLocal from "passport-local";
 
-import { User, UserDocument } from "../models/User";
+import { UserModel, UserDocument } from "../models/user.model";
 import { Request, Response, NextFunction } from "express";
 import { NativeError } from "mongoose";
 
@@ -17,7 +17,7 @@ passport.serializeUser<any, any>((req, user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    User.findById(id, (err: NativeError, user: UserDocument) => done(err, user));
+    UserModel.findById(id, (err: NativeError, user: UserDocument) => done(err, user));
 });
 
 /**
@@ -32,10 +32,12 @@ passport.use(
         (req, userIdentificator, password, done) => {
             const { login, email } = req.body
             
+            // req.session.cookie.expires = new Date(Date.now() + 60 * 1000);
+
             const userSearchParams = {} as userSearchParamsType;
             userSearchParams[email ? 'email': 'login'] = userIdentificator
 
-            User.findOne(userSearchParams, (err: NativeError, user: UserDocument) => {
+            UserModel.findOne(userSearchParams, (err: NativeError, user: UserDocument) => {
                 if (err) return done(err);
                 
                 if (!user) {

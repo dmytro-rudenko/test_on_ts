@@ -1,5 +1,5 @@
 import passport from "passport";
-import { User, UserDocument } from "../models/User";
+import { UserModel, UserDocument } from "../models/user.model";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { body, check, validationResult } from "express-validator";
@@ -80,7 +80,6 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     }
     await check("password", "Password must be at least 8 characters long").isLength({ min: 8 }).run(req);
     // await check("confirmPassword", "Passwords do not match").equals(req.body.password).run(req);
-    console.log(req.body)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -90,9 +89,9 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
 
     const newUserData = email ? { email, password } : { login, password }
 
-    const user = new User(newUserData);
+    const user = new UserModel(newUserData);
 
-    User.findOne({ $or: [{ email }, { login }] }, (err: NativeError, existingUser: UserDocument) => {
+    UserModel.findOne({ $or: [{ email }, { login }] }, (err: NativeError, existingUser: UserDocument) => {
         if (err) { return next(err); }
         if (existingUser) {
             return res.status(403).json({
