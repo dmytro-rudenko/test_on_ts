@@ -1,2 +1,3 @@
-export * as homeController from "./home.controller"
-export * as userController from "./user.controller"
+export { UserController } from "./user.controller";
+export { AlbumController } from "./album.controller";
+export { PhotoController } from "./photo.controller";

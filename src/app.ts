@@ -10,9 +10,7 @@ import passport from "passport";
 import bluebird from "bluebird";
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 
-import { homeController, userController } from './controllers'
-import { UserRoutes } from "./routes";
-
+import { UserRoute, AlbumRoute, PhotoRoute } from "./routes";
 // API keys and Passport configuration
 // Create Express server
 const app = express();
@@ -26,14 +24,15 @@ mongoose.connect(
     {
         useNewUrlParser: true,
         useCreateIndex: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     }).then(
         () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
     ).catch(err => {
         console.log(`MongoDB connection error. Please make sure MongoDB is running. ${err}`);
         // process.exit();
     }
-);
+    );
 
 // Express configuration
 app.set("port", process.env.PORT || 3000);
@@ -59,6 +58,7 @@ app.use(lusca.xssProtection(true));
 /**
  * Primary app routes.
  */
-app.get("/", homeController.index);
-app.use(UserRoutes)
+app.use(UserRoute);
+app.use(AlbumRoute);
+app.use(PhotoRoute);
 export default app;

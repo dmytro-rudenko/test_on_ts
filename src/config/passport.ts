@@ -2,7 +2,6 @@ import passport from "passport";
 import passportLocal from "passport-local";
 
 import { UserModel, UserDocument } from "../models/user.model";
-import { Request, Response, NextFunction } from "express";
 import { NativeError } from "mongoose";
 
 type userSearchParamsType = {
@@ -26,16 +25,16 @@ passport.deserializeUser((id, done) => {
 passport.use(
     new LocalStrategy(
         {
-            usernameField: 'userIdentificator',
+            usernameField: "userIdentificator",
             passReqToCallback: true
         },
         (req, userIdentificator, password, done) => {
-            const { login, email } = req.body
+            const { login, email } = req.body;
             
             // req.session.cookie.expires = new Date(Date.now() + 60 * 1000);
 
             const userSearchParams = {} as userSearchParamsType;
-            userSearchParams[email ? 'email': 'login'] = userIdentificator
+            userSearchParams[email ? "email": "login"] = userIdentificator;
 
             UserModel.findOne(userSearchParams, (err: NativeError, user: UserDocument) => {
                 if (err) return done(err);
@@ -50,7 +49,7 @@ passport.use(
                     if (isMatch) {
                         return done(undefined, user);
                     }
-                    return done(undefined, false, { message: `Invalid ${email ? 'email': 'login'} or password.` });
+                    return done(undefined, false, { message: `Invalid ${email ? "email": "login"} or password.` });
                 });
             });
         }
@@ -73,14 +72,5 @@ passport.use(
  *       - Else create a new account.
  */
 
-/**
- * Login Required middleware.
- */
-export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-    if (req.isAuthenticated()) return next()
 
-    res.status(401).json({
-        status: 'Access denied'
-    });
-};
 

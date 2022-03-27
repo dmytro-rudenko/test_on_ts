@@ -10,7 +10,7 @@ import { NativeError } from "mongoose";
  * Sign in using email and password.
  * @route POST /login
  */
-export const postLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const signIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (req.body.email) {
         await check("email", "Email is not valid")
             .isEmail()
@@ -19,12 +19,12 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
         await body("email")
             .normalizeEmail({ gmail_remove_dots: false })
             .run(req);
-        req.body.userIdentificator = req.body.email
+        req.body.userIdentificator = req.body.email;
     } else {
         await check("login", "Login cannot be blank")
             .isLength({ min: 1 })
             .run(req);
-        req.body.userIdentificator = req.body.login
+        req.body.userIdentificator = req.body.login;
     }
 
     await check("password", "Password cannot be blank").isLength({ min: 1 }).run(req);
@@ -32,15 +32,15 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        res.status(403).json({ errors: errors.array() })
-        return
+        res.status(403).json({ errors: errors.array() });
+        return;
     }
 
     passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) { return next(err); }
         if (!user) {
             res.status(400).json({ message: info.message });
-            return
+            return;
         }
         req.logIn(user, (err) => {
             if (err) {
@@ -56,17 +56,17 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
  * Log out.
  * @route GET /logout
  */
-export const logout = (req: Request, res: Response): void => {
+const signOut = (req: Request, res: Response): void => {
     req.logout();
-    res.status(200).json({ message: 'Logged out' });
+    res.status(200).json({ message: "Logged out" });
 };
 
 /**
  * Create a new local account.
  * @route POST /signup
  */
-export const postSignup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { email, login, password } = req.body
+const signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { email, login, password } = req.body;
 
     if (email) {
         await check("email", "Email is not valid")
@@ -83,11 +83,11 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        res.status(403).json({ errors: errors.array() })
-        return
+        res.status(403).json({ errors: errors.array() });
+        return;
     }
 
-    const newUserData = email ? { email, password } : { login, password }
+    const newUserData = email ? { email, password } : { login, password };
 
     const user = new UserModel(newUserData);
 
@@ -96,7 +96,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
         if (existingUser) {
             return res.status(403).json({
                 message: "Account with that email address or login already exists."
-            })
+            });
         }
         user.save((err) => {
             if (err) { return next(err); }
@@ -112,10 +112,12 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
 
 /**
  * Profile page.
- * @route GET /account
+ * @route GET /user
  */
-export const getAccount = (req: Request, res: Response): void => {
+const getUser = (req: Request, res: Response): void => {
     res.status(200).json({
         user: req.user
-    })
+    });
 };
+
+export const UserController = { signIn, signUp, signOut, getUser };
