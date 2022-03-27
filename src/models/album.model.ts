@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 export type AlbumDocument = mongoose.Document & {
     albumId: number;
     title: string;
@@ -9,8 +9,8 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
     {
         albumId: { type: Number, unique: true },
         title: { type: String },
-        owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     },
     { timestamps: true },
-);
-export const AlbumModel = mongoose.model<AlbumDocument>("Album", albumSchema);
+)
+export const AlbumModel = mongoose.model<AlbumDocument>('Album', albumSchema)

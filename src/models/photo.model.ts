@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { NextFunction } from "express";
+import mongoose from 'mongoose'
+import { NextFunction } from 'express'
 export type PhotoDocument = mongoose.Document & {
   album: mongoose.Schema.Types.ObjectId;
   title: string;
@@ -12,7 +12,7 @@ const photoSchema = new mongoose.Schema<PhotoDocument>(
   {
     album: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Album",
+      ref: 'Album',
     },
     title: {
       type: String
@@ -25,22 +25,20 @@ const photoSchema = new mongoose.Schema<PhotoDocument>(
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     }
   },
   {
     timestamps: true,
-    toJson: { virtuals: true },
-    toObject: { virtuals: true },
   },
-);
+)
 
 photoSchema.pre(/^find/, function (next: NextFunction) {
   this.populate({
-    path: "owner",
+    path: 'owner',
   }).populate({
-    path: "album",
-  });
-  next();
-});
-export const PhotoModel = mongoose.model<PhotoDocument>("Photo", photoSchema);
+    path: 'album',
+  })
+  next()
+})
+export const PhotoModel = mongoose.model<PhotoDocument>('Photo', photoSchema)
