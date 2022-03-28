@@ -17,7 +17,7 @@ const changeAlbumTitle = async (req: Request, res: Response, next: NextFunction)
 
     const album = (await AlbumModel.findOneAndUpdate({ albumId }, { title: newAlbumName })) as AlbumDocument
 
-    res.status(200).json({ status: 'success', album })
+    res.status(200).json({ status: STATUS.SUCCESS, album })
   } catch (err) {
     res.status(503).json({
       status: STATUS.FAILED,

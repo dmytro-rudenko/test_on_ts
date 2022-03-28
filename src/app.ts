@@ -24,7 +24,7 @@ mongoose.connect(
         useNewUrlParser: true,
         useCreateIndex: true,
         useUnifiedTopology: true,
-        // useFindAndModify: false
+        useFindAndModify: false
     })
     .then(
         () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },

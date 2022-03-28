@@ -8,3 +8,5 @@ export const MESSAGE = {
   PHOTO_DELETED: 'photo deleted',
   NEW_ALBUM_IS_REQUIRED: 'newAlbumName is required'
 }
+
+export const JSONPLACEHOLDER_URL = 'http://jsonplaceholder.typicode.com/photos'

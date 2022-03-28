@@ -1,7 +1,8 @@
 import { AlbumModel, AlbumDocument } from '../models/album.model'
 import { PhotoModel, PhotoDocument } from '../models/photo.model'
+import { UserDocument } from '../models/user.model'
 import { Request, Response, NextFunction } from 'express'
-import { STATUS, MESSAGE } from '../constants'
+import { STATUS, MESSAGE, JSONPLACEHOLDER_URL } from '../constants'
 import axios from 'axios'
 /**
  * Save photo from jsonplaceholder
@@ -10,19 +11,19 @@ import axios from 'axios'
 
 const loadPhotos = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { data } = await axios.get('http://jsonplaceholder.typicode.com/photos')
+    const { data } = await axios.get(JSONPLACEHOLDER_URL)
 
     for (const photo of data) {
       const { albumId, title, url, thumbnailUrl } = photo
-      // @ts-ignore
-      const owner = req.user._id
+      const user = req.user as UserDocument
+
       let album = await AlbumModel.findOne({ albumId })
 
       if (!album) {
         const albumData = {
           albumId,
           title: albumId,
-          owner,
+          owner: user._id,
         } as AlbumDocument
 
         album = await AlbumModel.create(albumData)
@@ -32,14 +33,14 @@ const loadPhotos = async (req: Request, res: Response, next: NextFunction): Prom
         title,
         url,
         thumbnailUrl,
-        owner,
+        owner: user._id,
         album: album._id,
       } as PhotoDocument
 
       await PhotoModel.create(photoData)
     }
 
-    res.status(200).json({ status: STATUS.SUCCESS, message: MESSAGE.PHOTOS_LOADED })
+    res.status(201).json({ status: STATUS.SUCCESS, message: MESSAGE.PHOTOS_LOADED })
   } catch (err) {
     const statusCode = err?.response.status || 503
 
