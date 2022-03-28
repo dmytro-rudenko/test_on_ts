@@ -4,7 +4,7 @@ import { ChangeAlbumTitleRequest } from '../requests'
 import { STATUS, MESSAGE } from '../constants'
 /**
  * Sign in using email and password.
- * @route POST /change-album-title
+ * @route PUT /change-album-title
  */
 
 const changeAlbumTitle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
