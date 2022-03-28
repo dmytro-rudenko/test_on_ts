@@ -28,7 +28,7 @@ const changeAlbumTitle = async (req: Request, res: Response, next: NextFunction)
 }
 
 /**
- * Delete photo by albumid list
+ * Delete album with photos by albumid list
  * @route DELETE /delete-album
  */
  const deleteAlbum = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
