@@ -6,6 +6,6 @@ const router = Router()
 
 router.post('/load-photos', isAuthenticated, PhotoController.loadPhotos)
 router.get('/get-photos', PhotoController.getPhotos)
-router.delete('/delete-photo/:id', PhotoController.deletePhoto)
+router.delete('/delete-photo', PhotoController.deletePhoto)
 
 export const PhotoRoute = router

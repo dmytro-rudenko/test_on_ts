@@ -35,6 +35,7 @@ const loadPhotos = async (req: Request, res: Response, next: NextFunction): Prom
         thumbnailUrl,
         owner: user._id,
         album: album._id,
+        albumId,
       } as PhotoDocument
 
       await PhotoModel.create(photoData)
@@ -81,14 +82,25 @@ const getPhotos = async (req: Request, res: Response, next: NextFunction): Promi
   }
 }
 /**
- * Delete photo by id
- * @route DELETE /delete-photos/:id
+ * Delete photo by photoId list
+ * @route DELETE /delete-photos
  */
 const deletePhoto = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    await PhotoModel.findByIdAndRemove(req.params.id)
+    const { photoId } = req.body
+    const photoIdList = photoId.includes(', ') ? photoId.split(', ') : [photoId]
 
-    res.status(200).json({ status: STATUS.SUCCESS, message: MESSAGE.PHOTO_DELETED })
+    const { deletedCount } = await PhotoModel.deleteMany({
+      _id: {
+        $in: photoIdList
+      }
+    })
+    if (deletedCount > 0) {
+      res.status(200).json({ status: STATUS.SUCCESS, message: MESSAGE.PHOTO_DELETED })
+    } else {
+      res.status(400).json({ status: STATUS.FAILED, message: MESSAGE.PHOTOS_NOT_FOUNDED })
+    }
+
   } catch (err) {
     res.status(503).json({
       status: STATUS.FAILED,

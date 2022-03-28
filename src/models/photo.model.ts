@@ -6,6 +6,7 @@ export type PhotoDocument = mongoose.Document & {
   url: string;
   thumbnailUrl: string;
   owner: mongoose.Schema.Types.ObjectId;
+  albumId: string;
 };
 
 const photoSchema = new mongoose.Schema<PhotoDocument>(
@@ -26,6 +27,9 @@ const photoSchema = new mongoose.Schema<PhotoDocument>(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+    },
+    albumId: { 
+      type: Number 
     }
   },
   {
